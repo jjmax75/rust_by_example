@@ -13,7 +13,10 @@ struct Person<'a> {
   age: u8
 }
 
-impl fmt::Display for Structure {
+
+struct DisplayableStruct(i32);
+
+impl fmt::Display for DisplayableStruct {
   fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
     write!(f, "{}", self.0)
   }
@@ -52,7 +55,7 @@ fn main() {
   println!("{:?} months in a year.", 12);
 
   // but now with added struct printing
-  println!("Now {:?} will print", Deep(Structure(3)));
+  println!("Debug of `Deep(Structure(3))` - {:?}", Deep(Structure(3)));
 
   // pretty print
   let name = "John";
@@ -62,5 +65,5 @@ fn main() {
   println!("{:?}", john);
   println!("{:#?}", john);
 
-
+  println!("Display of `DisplayableStruct(5)` - {}", DisplayableStruct(5));
 }

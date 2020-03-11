@@ -1,4 +1,23 @@
-// this is a simple hello world
+use std::fmt;
+
+#[allow(dead_code)] // not needed as Structure is used
+#[derive(Debug)]
+struct Structure(i32);
+
+#[derive(Debug)]
+struct Deep(Structure);
+
+#[derive(Debug)]
+struct Person<'a> {
+  name: &'a str,
+  age: u8
+}
+
+impl fmt::Display for Structure {
+  fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+    write!(f, "{}", self.0)
+  }
+}
 
 fn main() {
   println!("Hello world!");
@@ -25,23 +44,23 @@ fn main() {
   // 007
   println!("My name is {1}, {0} {1}", "James", "Bond");
 
-  // debug a struct
-  #[allow(dead_code)]
-  #[derive(Debug)]
-  struct Structure(i32);
-
-  // println!("This struct is `{}`", Structure(3));
-
   // pi rounding to 3 places
   let pi = 3.141592;
   println!("Pi is roughly {:.3}", pi);
 
   // Debug
-  #[derive(Debug)]
-  struct Deep(Structure);
-
   println!("{:?} months in a year.", 12);
 
   // but now with added struct printing
   println!("Now {:?} will print", Deep(Structure(3)));
+
+  // pretty print
+  let name = "John";
+  let age = 44;
+  let john = Person { name, age };
+
+  println!("{:?}", john);
+  println!("{:#?}", john);
+
+
 }

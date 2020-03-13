@@ -1,4 +1,4 @@
-use std::fmt;
+use std::fmt::{self, Formatter, Display, Result};
 
 #[allow(dead_code)] // not needed as Structure is used
 #[derive(Debug)]
@@ -15,8 +15,8 @@ struct Person<'a> {
 
 struct DisplayableStruct(i32);
 
-impl fmt::Display for DisplayableStruct {
-  fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+impl Display for DisplayableStruct {
+  fn fmt(&self, f: &mut Formatter) -> Result {
     write!(f, "{}", self.0)
   }
 }
@@ -24,8 +24,8 @@ impl fmt::Display for DisplayableStruct {
 #[derive(Debug)]
 struct MinMax(i64, i64);
 
-impl fmt::Display for MinMax {
-  fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+impl Display for MinMax {
+  fn fmt(&self, f: &mut Formatter) -> Result {
     write!(f, "{}, {}", self.0, self.1)
   }
 }
@@ -36,8 +36,8 @@ struct Point2D {
   y: f64
 }
 
-impl fmt::Display for Point2D {
-  fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+impl Display for Point2D {
+  fn fmt(&self, f: &mut Formatter) -> Result {
     write!(f, "x: {}, y: {}", self.x, self.y)
   }
 }
@@ -48,14 +48,15 @@ struct Complex {
   imag: f32
 }
 
-impl fmt::Display for Complex {
-  fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+impl Display for Complex {
+  fn fmt(&self, f: &mut Formatter) -> Result {
     write!(f, "{} + {}i", self.real, self.imag)
   }
 }
 
 struct List(Vec<i32>);
 
+// leaving fmt:: here as an example
 impl fmt::Display for List {
   fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
     let vec = &self.0;
@@ -68,6 +69,37 @@ impl fmt::Display for List {
     }
 
     write!(f, "]")
+  }
+}
+
+#[derive(Debug)]
+struct City {
+  name: &'static str,
+  lat: f32,
+  lon: f32
+}
+
+impl Display for City {
+  fn fmt(&self, f: &mut Formatter) -> Result {
+    let lat_c = if self.lat >= 0.0 { 'N' } else { 'S' };
+    let lon_c = if self.lon >= 0.0 { 'E' } else { 'W' };
+
+    write!(f, "{}: {:.3}°{} {:.3}°{}",
+      self.name, self.lat.abs(), lat_c, self.lon.abs(), lon_c)
+  }
+}
+
+#[derive(Debug)]
+struct Color {
+  red: u8,
+  green: u8,
+  blue: u8
+}
+
+impl Display for Color {
+  fn fmt(&self, f: &mut Formatter) -> Result {
+    write!(f, "RGB ({0:3}, {1:3}, {2:3}) 0x{0:02X}{1:02X}{2:02X}",
+      self.red, self.green, self.blue)
   }
 }
 
@@ -144,4 +176,22 @@ fn main() {
   let v = List(vec![1, 2, 3]);
 
   println!("{}", v);
+
+  let cities = [
+    City { name: "Dublin", lat: 53.347778, lon: -6.259722 },
+    City { name: "Oslo", lat: 59.95, lon: 10.75 },
+    City { name: "Vancouver", lat: 49.25, lon: -123.1 }
+  ];
+
+  for city in cities.iter() {
+    println!("{}", *city);
+  }
+
+  for color in [
+    Color { red: 128, green:255, blue: 90 },
+    Color { red: 0, green: 3, blue: 254 },
+    Color { red: 0, green: 0, blue: 0 }
+  ].iter() {
+    println!("{}", *color);
+  }
 }

@@ -11,12 +11,14 @@ struct Nil;
 // a tuple struct
 struct Pair(i32, f32);
 
+#[derive(Debug)]
 struct Point {
-  x: f32,
-  y: f32,
+  x: i32,
+  y: i32,
 }
 
 #[allow(dead_code)]
+#[derive(Debug)]
 struct Rectangle {
   top_left: Point,
   bottom_right: Point,
@@ -29,11 +31,11 @@ fn main() {
 
   println!("{:?}", peter);
 
-  let point: Point = Point { x: 10.3, y: 0.4 };
+  let point: Point = Point { x: 3, y: 2 };
 
   println!("point coordinates: ({}, {})", point.x, point.y);
 
-  let bottom_right = Point { x: 5.2, ..point };
+  let bottom_right = Point { x: 5, ..point };
 
   println!("second point: ({}, {})", bottom_right.x, bottom_right.y);
 
@@ -53,4 +55,14 @@ fn main() {
   let Pair(integer, decimal) = pair;
 
   println!("pair contains {:?} and {:?}", integer, decimal);
+
+  println!("area of rectangle {:?} is {}", _rectangle, rect_area(&_rectangle));
+}
+
+fn rect_area(rectangle: &Rectangle) -> i32 {
+
+  let length = rectangle.bottom_right.x - rectangle.top_left.x;
+  let width = rectangle.top_left.y - rectangle.bottom_right.y;
+
+  length * width
 }
